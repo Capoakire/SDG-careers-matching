@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Career match for a better world</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #e6f3fa;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    #game-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+    }
+    #left-box, #right-box, #grid {
+      width: 33.33%;
+      padding: 10px;
+    }
+    .job-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px 0;
+    }
+    .name-box {
+      width: 100px;
+      height: 20px;
+      border: 2px dashed #28a745;
+      margin-bottom: 5px;
+      background-color: #f9f9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    #left-box img {
+      width: 100px;
+      height: 100px;
+      cursor: move;
+    }
+    #right-box div {
+      width: 100px;
+      padding: 5px;
+      margin: 10px 0;
+      background-color: #f0f0f0;
+      border: 2px solid #28a745;
+      cursor: move;
+      user-select: none;
+    }
+    #grid {
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      min-height: 500px;
+    }
+    .match-row {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sdg-label {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+    .drop-zone {
+      width: 100px;
+      height: 120px;
+      border: 2px dashed #28a745;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f9f9f9;
+    }
+    .drop-zone.dragover {
+      background-color: #e0f7e9;
+      border-color: #218838;
+    }
+    .drop-zone img, .drop-zone div {
+      margin: 2px 0;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    #score, #result {
+      font-size: 20px;
+      color: #2c3e50;
+      margin: 20px 0;
+    }
+    #essay-prompt {
+      display: none;
+      margin-top: 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <div id="left-box">
+      <h3>Job pictures</h3>
+    </div>
+    <div id="grid">
+      <h3>Matches</h3>
+    </div>
+    <div id="right-box">
+      <h3>Job names</h3>
+    </div>
+  </div>
+  <button onclick="checkAnswers()">Check answers</button>
+  <p id="score">Points: 0</p>
+  <p id="result"></p>
+  <div id="essay-prompt">
+    <h2>Write your story</h2>
+    <p>Use these sentences to write a short story (50–80 words):</p>
+    <ul id="essay-sentences"></ul>
+  </div>
+
+  <script>
+    const careers = [
+      { name: 'judge', sdg: 'SDG 1: No poverty', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/judge.png', correctSentence: 'Judges help poor people with laws.' },
+      { name: 'military', sdg: 'SDG 2: Zero hunger', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/military.png', correctSentence: 'Military gives food to hungry people.' },
+      { name: 'doctor', sdg: 'SDG 3: Good health and well-being', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/doctor.png', correctSentence: 'Doctors help sick people.' },
+      { name: 'office worker', sdg: 'SDG 4: Quality education', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/officeworker.png', correctSentence: 'Office workers help children learn.' },
+      { name: 'farmer', sdg: 'SDG 5: Gender equality', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/farmer.png', correctSentence: 'Farmers help men and women work.' },
+      { name: 'scientist', sdg: 'SDG 6: Clean water and sanitation', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/scientist.png', correctSentence: 'Scientists clean dirty water.' },
+      { name: 'chef', sdg: 'SDG 7: Affordable and clean energy', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/chef.png', correctSentence: 'Chefs use solar power to cook.' },
+      { name: 'architect', sdg: 'SDG 8: Decent work and economic growth', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/architect.png', correctSentence: 'Architects make jobs for people.' },
+      { name: 'veterinarian', sdg: 'SDG 9: Industry, innovation and infrastructure', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/veterinarian.png', correctSentence: 'Veterinarians help sick animals.' },
+      { name: 'programmer', sdg: 'SDG 10: Reduced inequalities', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/programmer.png', correctSentence: 'Programmers help everyone use computers.' },
+      { name: 'reporter', sdg: 'SDG 11: Sustainable cities and communities', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/reporter.png', correctSentence: 'Reporters tell news about cities.' },
+      { name: 'astronaut', sdg: 'SDG 12: Responsible consumption and production', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/astronaut.png', correctSentence: 'Astronauts reduce space waste.' },
+      { name: 'journalist', sdg: 'SDG 13: Climate action', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/journalist.png', correctSentence: 'Journalists talk about climate.' },
+      { name: 'artist', sdg: 'SDG 14: Life below water', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/artist.png', correctSentence: 'Artists paint to save oceans.' },
+      { name: 'worker', sdg: 'SDG 15: Life on land', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/worker.png', correctSentence: 'Workers plant trees.' },
+      { name: 'judge', sdg: 'SDG 16: Peace, justice and strong institutions', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/judge.png', correctSentence: 'Judges keep people safe with laws.' },
+      { name: 'diplomat', sdg: 'SDG 17: Partnerships for the goals', image: 'https://raw.githubusercontent.com/your-username/career-sdg-game/main/images/diplomat.png', correctSentence: 'Diplomats work with other countries.' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const leftBox = document.getElementById('left-box');
+      const grid = document.getElementById('grid');
+      const rightBox = document.getElementById('right-box');
+
+      // Populate left box with draggable job pictures and name boxes
+      careers.forEach(career => {
+        const item = document.createElement('div');
+        item.className = 'job-item';
+        item.innerHTML = `
+          <div class="name-box" id="name-box-${career.name.replace(/ /g, '-')}" data-for="${career.name}"></div>
+          <img src="${career.image}" draggable="true" id="img-${career.name}" style="border: 2px solid #28a745">
+        `;
+        item.querySelector('img').addEventListener('dragstart', dragStart);
+        item.querySelector('.name-box').addEventListener('dragover', dragOver);
+        item.querySelector('.name-box').addEventListener('drop', dropName);
+        leftBox.appendChild(item);
+      });
+
+      // Populate right box with draggable job names
+      careers.forEach(career => {
+        const div = document.createElement('div');
+        div.textContent = career.name;
+        div.draggable = true;
+        div.id = `name-${career.name.replace(/ /g, '-')}`;
+        div.addEventListener('dragstart', dragStart);
+        rightBox.appendChild(div);
+      });
+
+      // Populate grid with SDG labels and empty drop zones
+      careers.forEach(career => {
+        const row = document.createElement('div');
+        row.className = 'match-row';
+        row.innerHTML = `
+          <div class="sdg-label">${career.sdg}</div>
+          <div class="drop-zone" id="drop-${career.sdg.replace(/[: ]/g, '-')}" data-sdg="${career.sdg}"></div>
+        `;
+        row.querySelector('.drop-zone').addEventListener('dragover', dragOver);
+        row.querySelector('.drop-zone').addEventListener('drop', drop);
+        grid.appendChild(row);
+      });
+    });
+
+    let draggedItem = null;
+
+    function dragStart(e) {
+      draggedItem = e.target;
+      e.dataTransfer.setData('text/plain', e.target.id);
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+      e.target.classList.add('dragover');
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      e.target.classList.remove('dragover');
+      const itemId = e.dataTransfer.getData('text/plain');
+      const item = document.getElementById(itemId);
+      if (item && !e.target.querySelector('img') && item.tagName === 'IMG') { // For images
+        e.target.appendChild(item.cloneNode(true));
+        item.style.display = 'none'; // Hide original image
+      } else if (item && !e.target.querySelector('div') && item.tagName === 'DIV' && !item.classList.contains('name-box')) { // For names
+        const clone = item.cloneNode(true);
+        clone.style.position = 'static';
+        e.target.appendChild(clone);
+        item.style.display = 'none'; // Hide original name
+      }
+    }
+
+    function dropName(e) {
+      e.preventDefault();
+      e.target.classList.remove('dragover');
+      const itemId = e.dataTransfer.getData('text/plain');
+      const item = document.getElementById(itemId);
+      if (item && item.tagName === 'DIV' && !item.classList.contains('name-box') && !e.target.hasChildNodes()) {
+        e.target.appendChild(item.cloneNode(true));
+        item.style.display = 'none'; // Hide original name
+      }
+    }
+
+    function checkAnswers() {
+      let points = 0;
+      let choicesMade = [];
+      const dropZones = document.querySelectorAll('.drop-zone');
+
+      dropZones.forEach(zone => {
+        const img = zone.querySelector('img');
+        const nameDiv = zone.querySelector('div');
+        if (img && nameDiv) {
+          const careerName = img.id.replace('img-', '');
+          const chosenName = nameDiv.textContent;
+          const career = careers.find(c => c.name === careerName);
+          if (chosenName === careerName) {
+            points += 10;
+            choicesMade.push(career.correctSentence);
+          } else {
+            points += 2;
+            choicesMade.push(`I matched ${chosenName} with ${careerName}.`);
+          }
+        } else {
+          points += 0; // No match, no points
+        }
+      });
+
+      document.getElementById('score').innerText = `Points: ${points}`;
+      document.getElementById('result').innerText = points === 170 ? 'Perfect! All correct!' : `You got ${points} points. Try again!`;
+
+      const essayPrompt = document.getElementById('essay-prompt');
+      essayPrompt.style.display = 'block';
+      const essaySentences = document.getElementById('essay-sentences');
+      essaySentences.innerHTML = choicesMade.map(sentence => `<li>${sentence}</li>`).join('');
+      essaySentences.innerHTML += `<li>I like these jobs.</li>`;
+    }
+  </script>
+</body>
+</html>
