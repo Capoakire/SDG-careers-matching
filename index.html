@@ -235,7 +235,7 @@
       { name: 'Journalist', sdg: ['SDG 10: Reduced inequalities', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/journalist.png', correctSentence: 'Journalists highlight inequalities and justice issues.' },
       { name: 'Reporter', sdg: ['SDG 11: Sustainable cities and communities', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/reporter.png', correctSentence: 'Reporters cover urban sustainability and climate news.' },
       { name: 'Astronaut', sdg: ['SDG 12: Responsible consumption and production', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/astronaut.png', correctSentence: 'Astronauts promote space sustainability and climate research.' },
-      { name: 'Politician', sdg: ['SDG 1: No poverty', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/politician.png', correctSentence: 'Politicians create policies to reduce poverty and address climate change.' },
+      { name: 'Politician', sdg: ['SDG 13: Climate action'], 'SDG 1: No poverty' image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/politician.png', correctSentence: 'Politicians create policies to reduce poverty and address climate change.' },
       { name: 'Veterinarian', sdg: ['SDG 14: Life below water', 'SDG 15: Life on land'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/veterinarian.png', correctSentence: 'Veterinarians protect marine and land wildlife.' },
       { name: 'Military', sdg: ['SDG 15: Life on land', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/military.png', correctSentence: 'Military forces protect land and maintain peace.' },
       { name: 'Police', sdg: ['SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/police.png', correctSentence: 'Police ensure safety and justice in communities.' }
@@ -369,10 +369,10 @@
             points += 10;
             choicesMade.push(`${careerName} correctly matches ${zone.getAttribute('data-sdg').split(', ')[0]}`);
           } else if (validSdgs.some(sdg => zone.getAttribute('data-sdg').includes(sdg))) {
-            points += 10;
+            points += 1;
             choicesMade.push(`${careerName} also matches ${zone.getAttribute('data-sdg').split(', ')[0]} as a valid option`);
           } else {
-            points += 2;
+            points += 1;
             choicesMade.push(`${chosenName} does not match ${zone.getAttribute('data-sdg').split(', ')[0]}. Correct options are: ${validSdgs.join(', ')}`);
           }
         } else {
