@@ -19,7 +19,7 @@
       animation: fadeIn 2s;
     }
     #game-container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 0 auto;
       background: linear-gradient(135deg, #FFFFFF 0%, #ADD8E6 100%);
       padding: 20px;
@@ -55,7 +55,7 @@
     }
     .name-box {
       width: 100px;
-      height: 40px; /* Increased height to accommodate bin button */
+      height: 30px;
       border: 2px dashed #28A745;
       margin-bottom: 5px;
       background-color: #FFFFFF;
@@ -69,25 +69,6 @@
     }
     .name-box.dragover {
       background-color: #E0F7E9;
-    }
-    .name-box .bin-button {
-      width: 20px;
-      height: 20px;
-      background-color: #FF4500; /* Red for bin */
-      border: none;
-      border-radius: 50%;
-      color: #FFFFFF;
-      cursor: pointer;
-      font-size: 12px;
-      line-height: 20px;
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      transition: transform 0.3s, background-color 0.3s;
-    }
-    .name-box .bin-button:hover {
-      transform: scale(1.2);
-      background-color: #DC143C;
     }
     #left-box img, .drop-zone img {
       width: 100px;
@@ -164,7 +145,7 @@
     .bin-button {
       width: 20px;
       height: 20px;
-      background-color: #FF4500; /* Red for bin */
+      background-color: #FF4500;
       border: none;
       border-radius: 50%;
       color: #FFFFFF;
@@ -202,7 +183,7 @@
       margin: 20px 0;
       text-shadow: 1px 1px 2px #ADD8E6;
     }
-    #essay-prompt {
+    #correct-answers {
       display: none;
       margin-top: 20px;
       text-align: left;
@@ -220,58 +201,54 @@
 <body>
   <div id="game-container">
     <div id="left-box">
-      <h3>Job pictures</h3>
+      <h3>Career pictures</h3>
+    </div>
+    <div id="right-box">
+      <h3>Career names</h3>
     </div>
     <div id="grid">
       <h3>Matches</h3>
-    </div>
-    <div id="right-box">
-      <h3>Job names</h3>
     </div>
   </div>
   <button onclick="checkAnswers()">Check answers</button>
   <p id="score">Points: 0</p>
   <p id="result"></p>
-  <div id="essay-prompt">
-    <h2>Write your story</h2>
-    <p>Use these sentences to write a short story (50–80 words):</p>
-    <ul id="essay-sentences"></ul>
+  <div id="correct-answers">
+    <h2>Correct Answers</h2>
+    <ul id="correct-list"></ul>
   </div>
 
   <script>
     const careers = [
-      { name: 'judge', sdg: 'SDG 1: No poverty', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/judge.png', correctSentence: 'Judges help poor people with laws.' },
-      { name: 'farmer', sdg: 'SDG 2: Zero hunger', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/farmer.png', correctSentence: 'Farmers ensure food for all.' },
-      { name: 'doctor', sdg: 'SDG 3: Good health and well-being', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/doctor.png', correctSentence: 'Doctors help sick people.' },
-      { name: 'teacher', sdg: 'SDG 4: Quality education', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/teacher.png', correctSentence: 'Teachers help children learn.' },
-      { name: 'diplomat', sdg: 'SDG 5: Gender equality', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/diplomat.png', correctSentence: 'Diplomats promote gender fairness.' },
-      { name: 'scientist', sdg: 'SDG 6: Clean water and sanitation', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/scientist.png', correctSentence: 'Scientists clean dirty water.' },
-      { name: 'chef', sdg: 'SDG 7: Affordable and clean energy', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/chef.png', correctSentence: 'Chefs use solar power to cook.' },
-      { name: 'architect', sdg: 'SDG 8: Decent work and economic growth', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/architect.png', correctSentence: 'Architects make jobs for people.' },
-      { name: 'programmer', sdg: 'SDG 9: Industry, innovation and infrastructure', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/programmer.png', correctSentence: 'Programmers build new technology.' },
-      { name: 'journalist', sdg: 'SDG 10: Reduced inequalities', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/journalist.png', correctSentence: 'Journalists fight unfairness.' },
-      { name: 'reporter', sdg: 'SDG 11: Sustainable cities and communities', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/reporter.png', correctSentence: 'Reporters tell news about cities.' },
-      { name: 'astronaut', sdg: 'SDG 12: Responsible consumption and production', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/astronaut.png', correctSentence: 'Astronauts reduce space waste.' },
-      { name: 'artist', sdg: 'SDG 13: Climate action', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/artist.png', correctSentence: 'Artists inspire climate action.' },
-      { name: 'veterinarian', sdg: 'SDG 14: Life below water', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/veterinarian.png', correctSentence: 'Veterinarians save ocean life.' },
-      { name: 'military', sdg: 'SDG 15: Life on land', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/military.png', correctSentence: 'Military protects land.' },
-      { name: 'police', sdg: 'SDG 16: Peace, justice and strong institutions', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/police.png', correctSentence: 'Police keep people safe with laws.' },
-      { name: 'scientist', sdg: 'SDG 17: Partnerships for the goals', image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/scientist.png', correctSentence: 'Scientists work with all countries.' }
+      { name: 'Judge', sdg: ['SDG 1: No poverty', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/judge.png', correctSentence: 'Judges help with laws and justice.' },
+      { name: 'Farmer', sdg: ['SDG 2: Zero hunger'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/farmer.png', correctSentence: 'Farmers ensure food for all.' },
+      { name: 'Doctor', sdg: ['SDG 3: Good health and well-being'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/doctor.png', correctSentence: 'Doctors help sick people.' },
+      { name: 'Teacher', sdg: ['SDG 4: Quality education'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/teacher.png', correctSentence: 'Teachers help children learn.' },
+      { name: 'Diplomat', sdg: ['SDG 5: Gender equality', 'SDG 17: Partnerships for the goals'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/diplomat.png', correctSentence: 'Diplomats promote fairness and partnerships.' },
+      { name: 'Scientist', sdg: ['SDG 6: Clean water and sanitation', 'SDG 17: Partnerships for the goals'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/scientist.png', correctSentence: 'Scientists clean water and collaborate globally.' },
+      { name: 'Chef', sdg: ['SDG 7: Affordable and clean energy'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/chef.png', correctSentence: 'Chefs use solar power to cook.' },
+      { name: 'Architect', sdg: ['SDG 8: Decent work and economic growth'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/architect.png', correctSentence: 'Architects make jobs for people.' },
+      { name: 'Programmer', sdg: ['SDG 9: Industry, innovation and infrastructure'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/programmer.png', correctSentence: 'Programmers build new technology.' },
+      { name: 'Journalist', sdg: ['SDG 10: Reduced inequalities'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/journalist.png', correctSentence: 'Journalists fight unfairness.' },
+      { name: 'Reporter', sdg: ['SDG 11: Sustainable cities and communities'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/reporter.png', correctSentence: 'Reporters tell news about cities.' },
+      { name: 'Astronaut', sdg: ['SDG 12: Responsible consumption and production'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/astronaut.png', correctSentence: 'Astronauts reduce space waste.' },
+      { name: 'Artist', sdg: ['SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/artist.png', correctSentence: 'Artists inspire climate action.' },
+      { name: 'Veterinarian', sdg: ['SDG 14: Life below water'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/veterinarian.png', correctSentence: 'Veterinarians save ocean life.' },
+      { name: 'Military', sdg: ['SDG 15: Life on land'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/military.png', correctSentence: 'Military protects land.' },
+      { name: 'Police', sdg: ['SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/police.png', correctSentence: 'Police keep people safe with laws.' }
     ];
 
     document.addEventListener('DOMContentLoaded', () => {
       const leftBox = document.getElementById('left-box');
-      const grid = document.getElementById('grid');
       const rightBox = document.getElementById('right-box');
+      const grid = document.getElementById('grid');
 
-      // Populate left box with draggable job pictures and name boxes with bin buttons
+      // Populate left box with draggable career pictures and name boxes (no bin button)
       careers.forEach(career => {
         const item = document.createElement('div');
         item.className = 'job-item';
         item.innerHTML = `
-          <div class="name-box" id="name-box-${career.name.replace(/ /g, '-')}" data-for="${career.name}">
-            <button class="bin-button" onclick="clearNameBox(this)">Bin</button>
-          </div>
+          <div class="name-box" id="name-box-${career.name.replace(/ /g, '-')}" data-for="${career.name}"></div>
           <img src="${career.image}" draggable="true" id="img-${career.name}" style="border: 2px solid #1E90FF">
         `;
         item.querySelector('img').addEventListener('dragstart', dragStart);
@@ -280,7 +257,7 @@
         leftBox.appendChild(item);
       });
 
-      // Populate right box with draggable job names
+      // Populate right box with draggable career names
       careers.forEach(career => {
         const div = document.createElement('div');
         div.textContent = career.name;
@@ -295,8 +272,8 @@
         const row = document.createElement('div');
         row.className = 'match-row';
         row.innerHTML = `
-          <div class="sdg-label">${career.sdg}</div>
-          <div class="drop-zone" id="drop-${career.sdg.replace(/[: ]/g, '-')}" data-sdg="${career.sdg}">
+          <div class="sdg-label">${career.sdg[0]}</div>
+          <div class="drop-zone" id="drop-${career.sdg[0].replace(/[: ]/g, '-')}" data-sdg="${career.sdg.join(', ')}">
             <button class="bin-button" onclick="clearDropZone(this)">Bin</button>
           </div>
         `;
@@ -324,17 +301,20 @@
       e.target.classList.remove('dragover');
       const itemId = e.dataTransfer.getData('text/plain');
       const item = document.getElementById(itemId);
-      if (item && item.tagName === 'IMG' && !e.target.querySelector('img')) {
-        const clone = item.cloneNode(true);
-        clone.style.width = '100px';
-        clone.style.height = '100px';
-        e.target.appendChild(clone);
-        // Keep original visible
-      } else if (item && item.tagName === 'DIV' && !item.classList.contains('name-box') && !e.target.querySelector('div')) {
-        const clone = item.cloneNode(true);
-        clone.style.position = 'static';
-        e.target.appendChild(clone);
-        item.style.display = 'none'; // Hide original name after drop to grid
+      if (item && (e.target.classList.contains('drop-zone') || e.target.classList.contains('name-box'))) {
+        if (item.tagName === 'IMG' && e.target.classList.contains('drop-zone') && !e.target.querySelector('img')) {
+          const clone = item.cloneNode(true);
+          clone.style.width = '100px';
+          clone.style.height = '100px';
+          e.target.appendChild(clone);
+        } else if (item.tagName === 'DIV' && !item.classList.contains('name-box') && !e.target.querySelector('div')) {
+          const clone = item.cloneNode(true);
+          clone.style.position = 'static';
+          e.target.appendChild(clone);
+          item.style.display = 'none'; // Hide only if dropped in valid target
+        }
+      } else if (item && item.parentElement.id === 'right-box') {
+        item.style.display = 'block'; // Return to right-box if dropped elsewhere
       }
     }
 
@@ -345,22 +325,25 @@
       const item = document.getElementById(itemId);
       if (item && item.tagName === 'DIV' && !item.classList.contains('name-box') && !e.target.querySelector('div')) {
         const expectedName = e.target.getAttribute('data-for');
-        if (item.textContent.toLowerCase() === expectedName) {
+        if (item.textContent.toLowerCase() === expectedName.toLowerCase()) {
           e.target.appendChild(item.cloneNode(true));
-          item.style.display = 'none'; // Hide original name after drop to name-box
+          item.style.display = 'none'; // Hide only if dropped in correct name-box
+        } else if (item.parentElement.id === 'right-box') {
+          item.style.display = 'block'; // Return to right-box if incorrect drop
         }
       }
     }
 
-    function clearNameBox(button) {
-      const nameBox = button.parentElement;
-      nameBox.innerHTML = '<button class="bin-button" onclick="clearNameBox(this)">Bin</button>';
-      nameBox.addEventListener('dragover', dragOver);
-      nameBox.addEventListener('drop', dropName);
-    }
-
     function clearDropZone(button) {
       const dropZone = button.parentElement;
+      const originalName = dropZone.querySelector('div');
+      if (originalName) {
+        const nameId = `name-${originalName.textContent.replace(/ /g, '-')}`;
+        const originalNameElement = document.getElementById(nameId);
+        if (originalNameElement) {
+          originalNameElement.style.display = 'block'; // Restore career name to right-box
+        }
+      }
       dropZone.innerHTML = '<button class="bin-button" onclick="clearDropZone(this)">Bin</button>';
       dropZone.addEventListener('dragover', dragOver);
       dropZone.addEventListener('drop', drop);
@@ -378,12 +361,16 @@
           const careerName = img.id.replace('img-', '');
           const chosenName = nameDiv.textContent;
           const career = careers.find(c => c.name === careerName);
-          if (chosenName === careerName) {
+          const validSdgs = career.sdg;
+          if (validSdgs.includes(zone.getAttribute('data-sdg').split(', ')[0])) {
             points += 10;
-            choicesMade.push(career.correctSentence);
+            choicesMade.push(`${careerName} correctly matches ${zone.getAttribute('data-sdg').split(', ')[0]}`);
+          } else if (validSdgs.some(sdg => zone.getAttribute('data-sdg').includes(sdg))) {
+            points += 10;
+            choicesMade.push(`${careerName} also matches ${zone.getAttribute('data-sdg').split(', ')[0]} as a valid option`);
           } else {
             points += 2;
-            choicesMade.push(`I matched ${chosenName} with ${careerName}.`);
+            choicesMade.push(`${chosenName} does not match ${zone.getAttribute('data-sdg').split(', ')[0]}. Correct options are: ${validSdgs.join(', ')}`);
           }
         } else {
           points += 0; // No match, no points
@@ -391,13 +378,12 @@
       });
 
       document.getElementById('score').innerText = `Points: ${points}`;
-      document.getElementById('result').innerText = points === 170 ? 'Perfect! All correct!' : `You got ${points} points. Try again!`;
+      document.getElementById('result').innerText = points === 160 ? 'Perfect! All correct!' : `You got ${points} points. Try again!`; // Adjusted for 16 careers
 
-      const essayPrompt = document.getElementById('essay-prompt');
-      essayPrompt.style.display = 'block';
-      const essaySentences = document.getElementById('essay-sentences');
-      essaySentences.innerHTML = choicesMade.map(sentence => `<li>${sentence}</li>`).join('');
-      essaySentences.innerHTML += `<li>I like these jobs.</li>`;
+      const correctAnswers = document.getElementById('correct-answers');
+      correctAnswers.style.display = 'block';
+      const correctList = document.getElementById('correct-list');
+      correctList.innerHTML = careers.map(career => `<li>${career.name}: ${career.sdg.join(', ')}</li>`).join('');
     }
   </script>
 </body>
