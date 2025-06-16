@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Career match for a better world</title>
+  <title>Career Match for a Better World</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -17,6 +17,13 @@
       color: #FFFFFF;
       text-shadow: 2px 2px 4px #000000;
       animation: fadeIn 2s;
+    }
+    #instructions {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px auto;
+      max-width: 800px;
     }
     #game-container {
       max-width: 1200px;
@@ -53,23 +60,6 @@
     .job-item:hover {
       transform: scale(1.1);
     }
-    .name-box {
-      width: 100px;
-      height: 30px;
-      border: 2px dashed #28A745;
-      margin-bottom: 5px;
-      background-color: #FFFFFF;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-      position: relative;
-    }
-    .name-box.dragover {
-      background-color: #E0F7E9;
-    }
     #left-box img, .drop-zone img {
       width: 100px;
       height: 100px;
@@ -79,7 +69,7 @@
       border-radius: 10px;
       transition: box-shadow 0.3s;
     }
-    #left-box img:hover, .drop-zone img:hover {
+    #left-box img:hover, .drop-zone img:hover, #left-box img:focus, .drop-zone img:focus {
       box-shadow: 0 0 10px #28A745;
     }
     #right-box {
@@ -98,7 +88,7 @@
       border-radius: 5px;
       transition: background-color 0.3s;
     }
-    #right-box div:hover {
+    #right-box div:hover, #right-box div:focus {
       background-color: #E0F7E9;
     }
     #grid {
@@ -139,6 +129,10 @@
       border-color: #218838;
       background-color: #E0F7E9;
     }
+    .drop-zone.incomplete {
+      border-color: #FF4500;
+      background-color: #FFE6E6;
+    }
     .drop-zone img, .drop-zone div {
       margin: 2px 0;
     }
@@ -157,7 +151,7 @@
       right: -10px;
       transition: transform 0.3s, background-color 0.3s;
     }
-    .bin-button:hover {
+    .bin-button:hover, .bin-button:focus {
       transform: scale(1.2);
       background-color: #DC143C;
     }
@@ -169,11 +163,11 @@
       border-radius: 10px;
       cursor: pointer;
       font-size: 16px;
-      margin-top: 20px;
+      margin: 10px;
       text-shadow: 1px 1px 2px #000000;
       transition: transform 0.3s, box-shadow 0.3s;
     }
-    button:hover {
+    button:hover, button:focus {
       transform: scale(1.05);
       box-shadow: 0 0 10px #28A745;
     }
@@ -199,25 +193,45 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+    @media (max-width: 768px) {
+      #game-container {
+        flex-direction: column;
+      }
+      #left-box, #right-box, #grid {
+        width: 100%;
+      }
+      .job-item img, .drop-zone img {
+        width: 80px;
+        height: 80px;
+      }
+      .drop-zone, #right-box div {
+        width: 80px;
+      }
+    }
   </style>
 </head>
 <body>
+  <h1>Career Match for a Better World</h1>
+  <div id="instructions">
+    <p><strong>How to Play:</strong> Drag career images from the left box and career names from the right box to the SDG drop zones in the center. Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Click "Check Answers" to score!</p>
+  </div>
   <div id="game-container">
     <div id="left-box">
-      <h3>Career pictures</h3>
+      <h3>Career Pictures</h3>
     </div>
     <div id="right-box">
-      <h3>Career names</h3>
+      <h3>Career Names</h3>
     </div>
     <div id="grid">
       <h3>Matches</h3>
     </div>
   </div>
-  <button onclick="checkAnswers()">Check answers</button>
+  <button onclick="checkAnswers()">Check Answers</button>
+  <button onclick="resetGame()">Reset Game</button>
   <p id="score">Points: 0</p>
   <p id="result"></p>
   <div id="correct-answers">
-    <h2>Correct Answers</h2>
+    <h2>Feedback and Correct Answers</h2>
     <ul id="correct-list"></ul>
   </div>
 
@@ -235,38 +249,51 @@
       { name: 'Journalist', sdg: ['SDG 10: Reduced inequalities', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/journalist.png', correctSentence: 'Journalists highlight inequalities and justice issues.' },
       { name: 'Reporter', sdg: ['SDG 11: Sustainable cities and communities', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/reporter.png', correctSentence: 'Reporters cover urban sustainability and climate news.' },
       { name: 'Astronaut', sdg: ['SDG 12: Responsible consumption and production', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/astronaut.png', correctSentence: 'Astronauts promote space sustainability and climate research.' },
-      { name: 'Politician', sdg: ['SDG 13: Climate action'], 'SDG 1: No poverty' image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/politician.png', correctSentence: 'Politicians create policies to reduce poverty and address climate change.' },
+      { name: 'Politician', sdg: ['SDG 13: Climate action', 'SDG 1: No poverty'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/politician.png', correctSentence: 'Politicians create policies to reduce poverty and address climate change.' },
       { name: 'Veterinarian', sdg: ['SDG 14: Life below water', 'SDG 15: Life on land'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/veterinarian.png', correctSentence: 'Veterinarians protect marine and land wildlife.' },
       { name: 'Military', sdg: ['SDG 15: Life on land', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/military.png', correctSentence: 'Military forces protect land and maintain peace.' },
-      { name: 'Police', sdg: ['SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/police.png', correctSentence: 'Police ensure safety and justice in communities.' }
+      { name: 'Police', sdg: ['SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/police.png', correctSentence: 'Police ensure safety and justice in communities.' },
+      { name: 'President', sdg: ['SDG 17: Partnerships for the goals', 'SDG 5: Gender equality'], image: 'https://via.placeholder.com/100?text=President', correctSentence: 'Presidents foster global partnerships and promote gender equality.' }
     ];
 
-    document.addEventListener('DOMContentLoaded', () => {
+    // Fisher-Yates shuffle algorithm
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function initializeGame() {
       const leftBox = document.getElementById('left-box');
       const rightBox = document.getElementById('right-box');
       const grid = document.getElementById('grid');
 
-      // Populate left box with draggable career pictures and name boxes (no bin button)
+      // Populate left box with draggable career pictures
       careers.forEach(career => {
         const item = document.createElement('div');
         item.className = 'job-item';
         item.innerHTML = `
-          <div class="name-box" id="name-box-${career.name.replace(/ /g, '-')}" data-for="${career.name}"></div>
-          <img src="${career.image}" draggable="true" id="img-${career.name}" style="border: 2px solid #1E90FF">
+          <img src="${career.image}" draggable="true" id="img-${career.name}" style="border: 2px solid #1E90FF" aria-label="Career image for ${career.name}" role="img">
         `;
         item.querySelector('img').addEventListener('dragstart', dragStart);
-        item.querySelector('.name-box').addEventListener('dragover', dragOver);
-        item.querySelector('.name-box').addEventListener('drop', dropName);
+        item.querySelector('img').setAttribute('tabindex', '0');
+        item.querySelector('img').addEventListener('keydown', handleKeydown);
         leftBox.appendChild(item);
       });
 
-      // Populate right box with draggable career names
-      careers.forEach(career => {
+      // Populate right box with shuffled career names
+      const shuffledCareers = shuffle([...careers]);
+      shuffledCareers.forEach(career => {
         const div = document.createElement('div');
         div.textContent = career.name;
         div.draggable = true;
         div.id = `name-${career.name.replace(/ /g, '-')}`;
+        div.setAttribute('tabindex', '0');
+        div.setAttribute('aria-label', `Career name: ${career.name}`);
         div.addEventListener('dragstart', dragStart);
+        div.addEventListener('keydown', handleKeydown);
         rightBox.appendChild(div);
       });
 
@@ -276,22 +303,30 @@
         row.className = 'match-row';
         row.innerHTML = `
           <div class="sdg-label">${career.sdg[0]}</div>
-          <div class="drop-zone" id="drop-${career.sdg[0].replace(/[: ]/g, '-')}" data-sdg="${career.sdg.join(', ')}">
-            <button class="bin-button" onclick="clearDropZone(this)">Bin</button>
+          <div class="drop-zone" id="drop-${career.sdg[0].replace(/[: ]/g, '-')}" data-sdg="${career.sdg.join(', ')}" role="region" aria-label="Drop zone for ${career.sdg[0]}">
+            <button class="bin-button" onclick="clearDropZone(this)" aria-label="Clear drop zone">Bin</button>
           </div>
         `;
         row.querySelector('.drop-zone').addEventListener('dragover', dragOver);
         row.querySelector('.drop-zone').addEventListener('drop', drop);
+        row.querySelector('.drop-zone').setAttribute('tabindex', '0');
+        row.querySelector('.drop-zone').addEventListener('keydown', handleKeydown);
+        row.querySelector('.bin-button').setAttribute('tabindex', '0');
         grid.appendChild(row);
       });
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeGame);
 
     let draggedItem = null;
+    let selectedItem = null;
 
     function dragStart(e) {
       draggedItem = e.target;
       e.dataTransfer.setData('text/plain', e.target.id);
       e.dataTransfer.effectAllowed = 'move';
+      selectedItem = e.target;
+      console.log(`Dragging: ${e.target.id}`);
     }
 
     function dragOver(e) {
@@ -304,36 +339,30 @@
       e.target.classList.remove('dragover');
       const itemId = e.dataTransfer.getData('text/plain');
       const item = document.getElementById(itemId);
-      if (item && (e.target.classList.contains('drop-zone') || e.target.classList.contains('name-box'))) {
-        if (item.tagName === 'IMG' && e.target.classList.contains('drop-zone') && !e.target.querySelector('img')) {
+      if (item && e.target.classList.contains('drop-zone')) {
+        if (item.tagName === 'IMG' && !e.target.querySelector('img')) {
           const clone = item.cloneNode(true);
           clone.style.width = '100px';
           clone.style.height = '100px';
+          clone.setAttribute('tabindex', '0');
+          clone.addEventListener('dragstart', dragStart);
+          clone.addEventListener('keydown', handleKeydown);
           e.target.appendChild(clone);
-        } else if (item.tagName === 'DIV' && !item.classList.contains('name-box') && !e.target.querySelector('div')) {
+          console.log(`Dropped image ${item.id} into ${e.target.id}`);
+          updateDropZoneStatus(e.target);
+        } else if (item.tagName === 'DIV' && !e.target.querySelector('div')) {
           const clone = item.cloneNode(true);
           clone.style.position = 'static';
+          clone.setAttribute('tabindex', '0');
+          clone.addEventListener('dragstart', dragStart);
+          clone.addEventListener('keydown', handleKeydown);
           e.target.appendChild(clone);
-          item.style.display = 'none'; // Hide only if dropped in valid target
+          item.style.display = 'none';
+          console.log(`Dropped name ${item.textContent} into ${e.target.id}`);
+          updateDropZoneStatus(e.target);
         }
       } else if (item && item.parentElement.id === 'right-box') {
-        item.style.display = 'block'; // Return to right-box if dropped elsewhere
-      }
-    }
-
-    function dropName(e) {
-      e.preventDefault();
-      e.target.classList.remove('dragover');
-      const itemId = e.dataTransfer.getData('text/plain');
-      const item = document.getElementById(itemId);
-      if (item && item.tagName === 'DIV' && !item.classList.contains('name-box') && !e.target.querySelector('div')) {
-        const expectedName = e.target.getAttribute('data-for');
-        if (item.textContent.toLowerCase() === expectedName.toLowerCase()) {
-          e.target.appendChild(item.cloneNode(true));
-          item.style.display = 'none'; // Hide only if dropped in correct name-box
-        } else if (item.parentElement.id === 'right-box') {
-          item.style.display = 'block'; // Return to right-box if incorrect drop
-        }
+        item.style.display = 'block';
       }
     }
 
@@ -344,12 +373,48 @@
         const nameId = `name-${originalName.textContent.replace(/ /g, '-')}`;
         const originalNameElement = document.getElementById(nameId);
         if (originalNameElement) {
-          originalNameElement.style.display = 'block'; // Restore career name to right-box
+          originalNameElement.style.display = 'block';
         }
       }
-      dropZone.innerHTML = '<button class="bin-button" onclick="clearDropZone(this)">Bin</button>';
+      dropZone.innerHTML = '<button class="bin-button" onclick="clearDropZone(this)" aria-label="Clear drop zone">Bin</button>';
       dropZone.addEventListener('dragover', dragOver);
       dropZone.addEventListener('drop', drop);
+      dropZone.setAttribute('tabindex', '0');
+      dropZone.addEventListener('keydown', handleKeydown);
+      dropZone.querySelector('.bin-button').setAttribute('tabindex', '0');
+      dropZone.classList.remove('incomplete');
+      console.log(`Cleared drop zone ${dropZone.id}`);
+    }
+
+    function updateDropZoneStatus(dropZone) {
+      const img = dropZone.querySelector('img');
+      const nameDiv = dropZone.querySelector('div');
+      if ((img && !nameDiv) || (!img && nameDiv)) {
+        dropZone.classList.add('incomplete');
+      } else {
+        dropZone.classList.remove('incomplete');
+      }
+    }
+
+    function handleKeydown(e) {
+      if (e.key === 'Enter' && e.target.classList.contains('bin-button')) {
+        clearDropZone(e.target);
+      } else if (e.key === 'Enter' && selectedItem) {
+        const target = e.target.classList.contains('drop-zone') ? e.target : null;
+        if (target) {
+          const event = { preventDefault: () => {}, target };
+          event.dataTransfer = { getData: () => selectedItem.id };
+          drop(event);
+        }
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+        const items = Array.from(document.querySelectorAll('img, #right-box div, .drop-zone, .bin-button'));
+        const currentIndex = items.indexOf(e.target);
+        let nextIndex = currentIndex + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1);
+        if (nextIndex < 0) nextIndex = items.length - 1;
+        if (nextIndex >= items.length) nextIndex = 0;
+        items[nextIndex].focus();
+        selectedItem = items[nextIndex];
+      }
     }
 
     function checkAnswers() {
@@ -363,6 +428,10 @@
         if (img && nameDiv) {
           const careerName = img.id.replace('img-', '');
           const chosenName = nameDiv.textContent;
+          if (careerName !== chosenName) {
+            choicesMade.push(`Mismatch: Image (${careerName}) and name (${chosenName}) do not correspond in ${zone.getAttribute('data-sdg').split(', ')[0]}`);
+            return;
+          }
           const career = careers.find(c => c.name === careerName);
           const validSdgs = career.sdg;
           if (validSdgs.includes(zone.getAttribute('data-sdg').split(', ')[0])) {
@@ -372,21 +441,40 @@
             points += 1;
             choicesMade.push(`${careerName} also matches ${zone.getAttribute('data-sdg').split(', ')[0]} as a valid option`);
           } else {
-            points += 1;
-            choicesMade.push(`${chosenName} does not match ${zone.getAttribute('data-sdg').split(', ')[0]}. Correct options are: ${validSdgs.join(', ')}`);
+            points += 0;
+            choicesMade.push(`${careerName} does not match ${zone.getAttribute('data-sdg').split(', ')[0]}. Correct options are: ${validSdgs.join(', ')}`);
           }
         } else {
-          points += 0; // No match, no points
+          points += 0;
+          const status = img ? `Image only (${img.id.replace('img-', '')})` : nameDiv ? `Name only (${nameDiv.textContent})` : 'Empty';
+          choicesMade.push(`Incomplete match for ${zone.getAttribute('data-sdg').split(', ')[0]}: ${status}`);
         }
       });
 
+      console.log('Choices made:', choicesMade);
       document.getElementById('score').innerText = `Points: ${points}`;
-      document.getElementById('result').innerText = points === 160 ? 'Perfect! All correct!' : `You got ${points} points. Try again!`;
+      document.getElementById('result').innerText = points === 170 ? 'Perfect! All correct!' : `You got ${points} points. Try again!`;
 
       const correctAnswers = document.getElementById('correct-answers');
       correctAnswers.style.display = 'block';
       const correctList = document.getElementById('correct-list');
-      correctList.innerHTML = careers.map(career => `<li><strong>${career.name}</strong>: ${career.sdg.join(', ')}</li>`).join('');
+      correctList.innerHTML = `<h3>Your Choices:</h3>${choicesMade.map(choice => `<li>${choice}</li>`).join('')}<hr><h3>Correct Answers:</h3>${careers.map(career => `<li><strong>${career.name}</strong>: ${career.sdg.join(', ')} - ${career.correctSentence}</li>`).join('')}`;
+    }
+
+    function resetGame() {
+      const leftBox = document.getElementById('left-box');
+      const rightBox = document.getElementById('right-box');
+      const grid = document.getElementById('grid');
+      const score = document.getElementById('score');
+      const result = document.getElementById('result');
+      const correctAnswers = document.getElementById('correct-answers');
+      leftBox.innerHTML = '<h3>Career Pictures</h3>';
+      rightBox.innerHTML = '<h3>Career Names</h3>';
+      grid.innerHTML = '<h3>Matches</h3>';
+      score.innerText = 'Points: 0';
+      result.innerText = '';
+      correctAnswers.style.display = 'none';
+      initializeGame();
     }
   </script>
 </body>
