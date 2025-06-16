@@ -213,7 +213,7 @@
 <body>
   <h1>Career Match for a Better World</h1>
   <div id="instructions">
-    <p><strong>How to Play:</strong> Drag career images from the left box and career names from the right box to the SDG drop zones in the center. Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Click "Check Answers" to score!</p>
+    <p><strong>How to Play:</strong> Drag career images from the left box and career names from the right box to the SDG drop zones in the center. Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Names remain in the right box for reuse. Click "Check Answers" to score!</p>
   </div>
   <div id="game-container">
     <div id="left-box">
@@ -357,25 +357,14 @@
           clone.addEventListener('dragstart', dragStart);
           clone.addEventListener('keydown', handleKeydown);
           e.target.appendChild(clone);
-          item.style.display = 'none';
           console.log(`Dropped name ${item.textContent} into ${e.target.id}`);
           updateDropZoneStatus(e.target);
         }
-      } else if (item && item.parentElement.id === 'right-box') {
-        item.style.display = 'block';
       }
     }
 
     function clearDropZone(button) {
       const dropZone = button.parentElement;
-      const originalName = dropZone.querySelector('div');
-      if (originalName) {
-        const nameId = `name-${originalName.textContent.replace(/ /g, '-')}`;
-        const originalNameElement = document.getElementById(nameId);
-        if (originalNameElement) {
-          originalNameElement.style.display = 'block';
-        }
-      }
       dropZone.innerHTML = '<button class="bin-button" onclick="clearDropZone(this)" aria-label="Clear drop zone">Bin</button>';
       dropZone.addEventListener('dragover', dragOver);
       dropZone.addEventListener('drop', drop);
