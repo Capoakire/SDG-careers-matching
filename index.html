@@ -288,7 +288,7 @@
 <body>
   <h1>Career Match for a Better World</h1>
   <div id="instructions">
-    <p><strong>How to Play:</strong> Drag career images from the left box (3 columns, 6 rows) and career names from the right box (2 columns, 9 rows) to the SDG drop zones in the center (3 rows, 4-4-5 items). Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Names remain in the right box for reuse. Some careers, like President, match all SDGs; others have multiple SDG matches. Click "Check Answers" to score!</p>
+    <p><strong>How to Play:</strong> Drag career images from the left box and career names to the SDG drop zones. Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Names remain in the right box for reuse. Some careers have multiple matches. Click "Check Answers" to check the score!</p>
   </div>
   <div id="game-container">
     <div id="left-box">
@@ -349,6 +349,26 @@
       ], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/president.png', correctSentence: 'Presidents drive policies to advance all Sustainable Development Goals.' }
     ];
 
+    const sdgs = [
+      'SDG 1: No poverty',
+      'SDG 2: Zero hunger',
+      'SDG 3: Good health and well-being',
+      'SDG 4: Quality education',
+      'SDG 5: Gender equality',
+      'SDG 6: Clean water and sanitation',
+      'SDG 7: Affordable and clean energy',
+      'SDG 8: Decent work and economic growth',
+      'SDG 9: Industry, innovation and infrastructure',
+      'SDG 10: Reduced inequalities',
+      'SDG 11: Sustainable cities and communities',
+      'SDG 12: Responsible consumption and production',
+      'SDG 13: Climate action',
+      'SDG 14: Life below water',
+      'SDG 15: Life on land',
+      'SDG 16: Peace, justice and strong institutions',
+      'SDG 17: Partnerships for the goals'
+    ];
+
     // Fisher-Yates shuffle algorithm
     function shuffle(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -390,13 +410,14 @@
         rightBox.appendChild(div);
       });
 
-      // Populate grid with SDG labels, drop zones, and bin buttons
-      careers.forEach(career => {
+      // Populate grid with SDG drop zones
+      sdgs.forEach((sdg, index) => {
+        const career = careers[index];
         const row = document.createElement('div');
         row.className = 'match-row';
         row.innerHTML = `
-          <div class="sdg-label">${career.sdg[0]}</div>
-          <div class="drop-zone" id="drop-${career.sdg[0].replace(/[: ]/g, '-')}" data-sdg="${career.sdg.join(', ')}" role="region" aria-label="Drop zone for ${career.sdg[0]}">
+          <div class="sdg-label">${sdg}</div>
+          <div class="drop-zone" id="drop-${sdg.replace(/[: ]/g, '-')}" data-sdg="${career.sdg.join(', ')}" role="region" aria-label="Drop zone for ${sdg}">
             <button class="bin-button" onclick="clearDropZone(this)" aria-label="Clear drop zone">Bin</button>
           </div>
         `;
@@ -511,12 +532,12 @@
           const careerName = img.id.replace('img-', '');
           const chosenName = nameDiv.textContent;
           if (careerName !== chosenName) {
-            choicesMade.push(`Mismatch: Image (${careerName}) and name (${chosenName}) do not correspond in ${zone.getAttribute('data-sdg').split(', ')[0]}`);
+            choicesMade.push(`Mismatch: Image (${careerName}) and name (${chosenName}) do not correspond in ${zone.id.replace('drop-', '').replace(/-/g, ' ')}`);
             return;
           }
           const career = careers.find(c => c.name === careerName);
           const validSdgs = career.sdg;
-          const targetSdg = zone.getAttribute('data-sdg').split(', ')[0];
+          const targetSdg = sdgs.find(sdg => `drop-${sdg.replace(/[: ]/g, '-')}` === zone.id);
           if (careerName === 'President') {
             points += 10;
             choicesMade.push(`${careerName} correctly matches ${targetSdg} as it applies to all SDGs`);
@@ -533,7 +554,8 @@
         } else {
           points += 0;
           const status = img ? `Image only (${img.id.replace('img-', '')})` : nameDiv ? `Name only (${nameDiv.textContent})` : 'Empty';
-          choicesMade.push(`Incomplete match for ${zone.getAttribute('data-sdg').split(', ')[0]}: ${status}`);
+          const targetSdg = sdgs.find(sdg => `drop-${sdg.replace(/[: ]/g, '-')}` === zone.id);
+          choicesMade.push(`Incomplete match for ${targetSdg}: ${status}`);
         }
       });
 
@@ -555,7 +577,7 @@
       const result = document.getElementById('result');
       const correctAnswers = document.getElementById('correct-answers');
       leftBox.innerHTML = '<h3>Career Pictures</h3>';
-      rightBox.innerHTML = '<h3>Career Names</h3>';
+      rightBox.innerHTML = '<h3>Names</h3>';
       grid.innerHTML = '<h3>Matches</h3>';
       score.innerText = 'Points: 0';
       result.innerText = '';
