@@ -288,7 +288,7 @@
 <body>
   <h1>Career Match for a Better World</h1>
   <div id="instructions">
-    <p><strong>How to Play:</strong> Drag career images from the left box and career names to the SDG drop zones. Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Names remain in the right box for reuse. Some careers have multiple matches. Click "Check Answers" to check the score!</p>
+    <p><strong>How to Play:</strong> Drag career images from the left box (3 columns, 6 rows) and career names from the right box (2 columns, 9 rows) to the SDG drop zones in the center (3 rows, 4-4-5 items). Both an image and a name must be dropped for a complete match. Drop zones with only an image or name will show a red border. Names remain in the right box for reuse. Some careers, like President, match all SDGs; others have multiple SDG matches. Click "Check Answers" to score!</p>
   </div>
   <div id="game-container">
     <div id="left-box">
@@ -312,19 +312,19 @@
 
   <script>
     const careers = [
-      { name: 'Judge', sdg: ['SDG 1: No poverty', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/judge.png', correctSentence: 'Judges ensure fair laws to reduce poverty and promote justice.' },
+      { name: 'Judge', sdg: ['SDG 1: No poverty', 'SDG 16: Peace, justice and strong institutions', 'SDG 5: Gender equality'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/judge.png', correctSentence: 'Judges ensure fair laws to reduce poverty, promote justice, and advance gender equality.' },
       { name: 'Farmer', sdg: ['SDG 2: Zero hunger', 'SDG 12: Responsible consumption and production', 'SDG 15: Life on land'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/farmer.png', correctSentence: 'Farmers grow food sustainably, reduce waste, and protect land.' },
       { name: 'Doctor', sdg: ['SDG 3: Good health and well-being', 'SDG 6: Clean water and sanitation'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/doctor.png', correctSentence: 'Doctors provide healthcare and support clean water initiatives.' },
-      { name: 'Teacher', sdg: ['SDG 4: Quality education', 'SDG 5: Gender equality'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/teacher.png', correctSentence: 'Teachers educate and promote gender equality.' },
+      { name: 'Teacher', sdg: ['SDG 4: Quality education', 'SDG 5: Gender equality', 'SDG 10: Reduced inequalities'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/teacher.png', correctSentence: 'Teachers educate, promote gender equality, and reduce inequalities.' },
       { name: 'Diplomat', sdg: ['SDG 5: Gender equality', 'SDG 17: Partnerships for the goals'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/diplomat.png', correctSentence: 'Diplomats promote gender equality and global cooperation.' },
-      { name: 'Scientist', sdg: ['SDG 6: Clean water and sanitation', 'SDG 13: Climate action', 'SDG 9: Industry, innovation and infrastructure'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/scientist.png', correctSentence: 'Scientists improve water, combat climate change, and innovate technology.' },
+      { name: 'Scientist', sdg: ['SDG 6: Clean water and sanitation', 'SDG 13: Climate action', 'SDG 9: Industry, innovation and infrastructure', 'SDG 15: Life on land'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/scientist.png', correctSentence: 'Scientists improve water, combat climate change, innovate technology, and protect land.' },
       { name: 'Chef', sdg: ['SDG 7: Affordable and clean energy', 'SDG 12: Responsible consumption and production'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/chef.png', correctSentence: 'Chefs use renewable energy and reduce food waste.' },
       { name: 'Architect', sdg: ['SDG 8: Decent work and economic growth', 'SDG 9: Industry, innovation and infrastructure', 'SDG 11: Sustainable cities and communities', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/architect.png', correctSentence: 'Architects create jobs, innovate buildings, design sustainable cities, and address climate impacts.' },
       { name: 'Programmer', sdg: ['SDG 9: Industry, innovation and infrastructure', 'SDG 8: Decent work and economic growth'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/programmer.png', correctSentence: 'Programmers innovate technology and support job creation.' },
       { name: 'Journalist', sdg: ['SDG 10: Reduced inequalities', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/journalist.png', correctSentence: 'Journalists highlight inequalities and justice issues.' },
       { name: 'Reporter', sdg: ['SDG 11: Sustainable cities and communities', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/reporter.png', correctSentence: 'Reporters cover urban sustainability and climate news.' },
       { name: 'Astronaut', sdg: ['SDG 12: Responsible consumption and production', 'SDG 13: Climate action'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/astronaut.png', correctSentence: 'Astronauts promote space sustainability and climate research.' },
-      { name: 'Politician', sdg: ['SDG 13: Climate action', 'SDG 1: No poverty'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/politician.png', correctSentence: 'Politicians create policies to reduce poverty and address climate change.' },
+      { name: 'Politician', sdg: ['SDG 13: Climate action', 'SDG 1: No poverty', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/politician.png', correctSentence: 'Politicians create policies to reduce poverty, address climate change, and promote justice.' },
       { name: 'Veterinarian', sdg: ['SDG 14: Life below water', 'SDG 15: Life on land'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/veterinarian.png', correctSentence: 'Veterinarians protect marine and land wildlife.' },
       { name: 'Military', sdg: ['SDG 15: Life on land', 'SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/military.png', correctSentence: 'Military forces protect land and maintain peace.' },
       { name: 'Police', sdg: ['SDG 16: Peace, justice and strong institutions'], image: 'https://raw.githubusercontent.com/Capoakire/SDG-careers-matching/main/police.png', correctSentence: 'Police ensure safety and justice in communities.' },
@@ -518,7 +518,6 @@
           const validSdgs = career.sdg;
           const targetSdg = zone.getAttribute('data-sdg').split(', ')[0];
           if (careerName === 'President') {
-            // President is correct for any SDG
             points += 10;
             choicesMade.push(`${careerName} correctly matches ${targetSdg} as it applies to all SDGs`);
           } else if (validSdgs.includes(targetSdg)) {
